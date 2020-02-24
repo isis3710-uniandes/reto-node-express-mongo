@@ -7,7 +7,7 @@ var Mongolib = require("../db/Mongolib");
 router.post('/', function (req, res, next) {
   Mongolib.getDatabase(db => {
     Mongolib.insertDocuments(db, data => {
-      socketApi.sendNotification(req.body);
+      socketApi.sendNotification();
       res.send(req.body);
     }, req.body)
   });
