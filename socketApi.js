@@ -15,18 +15,19 @@ io.on('connection', function (socket) {
     })
 
     socket.on("new-message", data => {
-        socketApi.sendNotification(data)
+        Mongolib.getDatabase(db => {
+            Mongolib.insertDocuments(db, () => {
+                socketApi.sendNotification()
+            }, data);
+        })
     })
 });
 
-socketApi.sendNotification = data => {
-
+socketApi.sendNotification = () => {
     Mongolib.getDatabase(db => {
-        Mongolib.insertDocuments(db, () => {
-            Mongolib.findDocuments(db, docs => {
-                io.sockets.emit('messages', docs);
-            })
-        }, data)
+        Mongolib.findDocuments(db, docs => {
+            io.sockets.emit('messages', docs);
+        });
     })
 }
 
